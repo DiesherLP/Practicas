@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Impresión de Ficha - Parroquia Tactic</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    /* Optimizaciones de rendimiento para impresión */
+    @media print {
+        .no-print { display: none !important; }
+        body { 
+            background-color: white !important; 
+            font-size: 10.5pt; 
+            color: black;
+            -webkit-print-color-adjust: exact; /* Fuerza la carga de colores y fondos */
+        }
+        .container { width: 100%; max-width: 100%; margin: 0; padding: 5mm; }
+        @page { size: A4; margin: 10mm; }
+    }
+
+    /* Contenedor de encabezado con dimensiones fijas para carga rápida */
+    .ficha-header { 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #000; 
+        padding-bottom: 10px; 
+        margin-bottom: 20px;
+        min-height: 110px; /* Reserva el espacio para que no "salte" al cargar */
+    }
+
+    .logo-img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        image-rendering: -webkit-optimize-contrast; /* Acelera el renderizado en Chrome/Edge */
+    }
+
+    .section-header { 
+        background-color: #f2f2f2 !important; 
+        font-weight: bold; 
+        padding: 4px 10px; 
+        border: 1px solid #000; 
+        margin-top: 12px; 
+        text-transform: uppercase; 
+    }
+    
+    .table-custom td { border: 1px solid #000 !important; padding: 5px; }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="no-print mb-4 text-center">
+            <button onclick="window.print()" class="btn btn-primary btn-lg shadow">🖨️ INICIAR IMPRESIÓN</button>
+            <a th:href="@{/recursos}" class="btn btn-secondary btn-lg">VOLVER AL LISTADO</a>
+        </div>
+
+        <div class="ficha-header d-flex justify-content-between align-items-center">
+            <img th:src="@{/images/logo.png}" alt="Logo Parroquia" style="height: 100px; width: auto;" decoding="async">
+            
+            <div class="text-center">
+                <h4 class="fw-bold">PARROQUIA SANTA MARÍA DE LA ASUNCIÓN</h4>
+                <p class="mb-1">TACTIC, ALTA VERAPAZ | <strong>SACRAMENTO DE CONFIRMACIÓN</strong></p>
+                <h5 class="mt-2 fw-bold">FICHA INFORMATIVA</h5>
+            </div>
+            
+            <img th:src="@{/images/espiritu.png}" alt="Espíritu Santo" style="height: 100px; width: auto;" decoding="async">
+        </div>
+
+        <div class="section-header">1. INFORMACIÓN DEL CATEQUIZANDO / INTERLOCUTOR</div>
+        <table class="table table-custom">
+            <tr><td colspan="4"><strong>NOMBRE:</strong> <span th:text="${recurso.nombre}"></span></td></tr>
+            <tr>
+                <td style="width: 30%;"><strong>FECHA NAC.:</strong> <span th:text="${recurso.fechaNacimiento}"></span></td>
+                <td style="width: 20%;"><strong>EDAD:</strong> <span th:text="${recurso.edad}"></span> AÑOS</td>
+                <td colspan="2"><strong>NO. TELÉFONO:</strong> <span th:text="${recurso.telefono}"></span></td>
+            </tr>
+            <tr><td colspan="4"><strong>DIRECCIÓN:</strong> <span th:text="${recurso.direccion}"></span></td></tr>
+            <tr>
+                <td style="width: 50%;"><strong>VIVE CON:</strong> <span th:text="${recurso.viveCon}"></span></td>
+                <td colspan="2"><strong>HIJOS:</strong> <span th:text="${recurso.hijos}"></span></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <strong>SACRAMENTOS RECIBIDOS:</strong> 
+                    [ <span th:text="${recurso.bautismo ? 'X' : ' '}"></span> ] BAUTISMO
+                    [ <span th:text="${recurso.eucaristia ? 'X' : ' '}"></span> ] EUCARISTÍA
+                    [ <span th:text="${recurso.reconciliacion ? 'X' : ' '}"></span> ] RECONCILIACIÓN (confesión)
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-header">2. INFORMACIÓN DE LOS PADRES</div>
+        <table class="table table-custom">
+            <tr>
+                <td style="width: 70%;"><strong>NOMBRE DE PAPÁ:</strong> <span th:text="${recurso.nombrePapa}"></span></td>
+                <td><strong>NO. TELÉFONO:</strong> <span th:text="${recurso.telPapa}"></span></td>
+            </tr>
+            <tr>
+                <td><strong>NOMBRE DE MAMÁ:</strong> <span th:text="${recurso.nombreMama}"></span></td>
+                <td><strong>NO. TELÉFONO:</strong> <span th:text="${recurso.telMama}"></span></td>
+            </tr>
+        </table>
+
+        <div class="section-header">3. CONTACTO DE EMERGENCIA</div>
+        <table class="table table-custom mb-0">
+            <tr><td colspan="2"><strong>NOMBRE:</strong> <span th:text="${recurso.nombreEmergencia}"></span></td></tr>
+            <tr>
+                <td style="width: 50%;"><strong>NO. TELÉFONO:</strong> <span th:text="${recurso.telEmergencia}"></span></td>
+                <td><strong>RELACIÓN:</strong> <span th:text="${recurso.relacionEmergencia}"></span></td>
+            </tr>
+        </table>
+        <div class="border border-dark border-top-0 p-2 text-center">
+            <div class="firma-contenedor">
+                <div class="linea-firma"></div>
+                <div class="fw-bold small">FIRMA</div>
+            </div>
+        </div>
+
+        <div class="section-header">4. INFORMACIÓN DE CATEQUÉSIS</div>
+        <table class="table table-custom">
+            <tr>
+                <td style="width: 70%;"><strong>CATEQUISTA:</strong> <span th:text="${recurso.catequista}"></span></td>
+                <td><strong>INICIO:</strong> <span th:text="${recurso.inicioCatequesis}"></span></td>
+            </tr>
+            <tr>
+                <td><strong>DÍA:</strong> <span th:text="${recurso.diaCatequesis}"></span></td>
+                <td><strong>HORA:</strong> <span th:text="${recurso.horaCatequesis}"></span></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
